@@ -76,7 +76,7 @@ function createDrop() {
 
   // Make drops different sizes for visual variety
   const initialSize = 30; // Base size in pixels
-  const sizeMultiplier = Math.random() * 0.8 + 0.5;
+  const sizeMultiplier = Math.random() * 1.8 + 0.6;
   const size = initialSize * sizeMultiplier;
   drop.style.width = drop.style.height = `${size}px`;
 
@@ -86,8 +86,8 @@ function createDrop() {
   const xPosition = Math.random() * (gameWidth - 60);
   drop.style.left = xPosition + "px";
 
-  // Make drops fall for 4 seconds
-  drop.style.animationDuration = "4s";
+  // Make drops fall for 6 seconds
+  drop.style.animationDuration = "6s";
 
   // Add the new drop to the game screen
   gameContainer.appendChild(drop);
