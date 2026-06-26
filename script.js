@@ -5,6 +5,7 @@ let timerInterval; // Will store the countdown timer
 let score = 0; // Tracks the player's points
 let timeLeft = 30; // Countdown time in seconds
 let dropCount = 0; // Tracks how many drops have spawned
+let spawnIntervalId; // Stores the active drop spawn timer
 
 const gameContainer = document.getElementById("game-container");
 
@@ -76,6 +77,7 @@ function showResultPopup() {
 function endGame() {
   clearInterval(dropMaker);
   clearInterval(timerInterval);
+  clearInterval(spawnIntervalId);
   gameRunning = false;
 
   const gameContainer = document.getElementById("game-container");
@@ -88,6 +90,7 @@ function endGame() {
 function resetGame() {
   clearInterval(dropMaker);
   clearInterval(timerInterval);
+  clearInterval(spawnIntervalId);
   gameRunning = false;
 
   score = 0;
@@ -120,13 +123,28 @@ function startGame() {
   document.getElementById("result-popup").classList.add("hidden");
   document.getElementById("start-btn").textContent = "Playing...";
 
-  // Create new drops every 400 milliseconds
-  dropMaker = setInterval(createDrop, 400);
+  const spawnSchedule = [900, 500, 250];
+  let phase = 0;
+
+  function startSpawnPhase() {
+    clearInterval(spawnIntervalId);
+    spawnIntervalId = setInterval(createDrop, spawnSchedule[phase]);
+  }
+
+  startSpawnPhase();
 
   // Count down the timer once per second
   timerInterval = setInterval(() => {
     timeLeft -= 1;
     updateTimer();
+
+    if (timeLeft <= 20 && phase === 0) {
+      phase = 1;
+      startSpawnPhase();
+    } else if (timeLeft <= 10 && phase === 1) {
+      phase = 2;
+      startSpawnPhase();
+    }
 
     if (timeLeft <= 0) {
       endGame();
