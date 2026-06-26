@@ -5,8 +5,11 @@ let timerInterval; // Will store the countdown timer
 let score = 0; // Tracks the player's points
 let timeLeft = 30; // Countdown time in seconds
 
+const gameContainer = document.getElementById("game-container");
+
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
+gameContainer.addEventListener("pointerdown", handleDropHit);
 
 function updateScore() {
   document.getElementById("score").textContent = score;
@@ -14,6 +17,16 @@ function updateScore() {
 
 function updateTimer() {
   document.getElementById("time").textContent = timeLeft;
+}
+
+function handleDropHit(event) {
+  const drop = event.target.closest(".water-drop");
+
+  if (!drop || !gameRunning) return;
+
+  score += 1;
+  updateScore();
+  drop.remove();
 }
 
 function endGame() {
@@ -42,8 +55,8 @@ function startGame() {
   gameRunning = true;
   document.getElementById("start-btn").textContent = "Playing...";
 
-  // Create new drops every 275 milliseconds
-  dropMaker = setInterval(createDrop, 275);
+  // Create new drops every 400 milliseconds
+  dropMaker = setInterval(createDrop, 400);
 
   // Count down the timer once per second
   timerInterval = setInterval(() => {
@@ -77,15 +90,7 @@ function createDrop() {
   drop.style.animationDuration = "4s";
 
   // Add the new drop to the game screen
-  document.getElementById("game-container").appendChild(drop);
-
-  drop.addEventListener("click", () => {
-    if (!gameRunning) return;
-
-    score += 1;
-    updateScore();
-    drop.remove();
-  });
+  gameContainer.appendChild(drop);
 
   // Remove drops that reach the bottom (weren't clicked)
   drop.addEventListener("animationend", () => {
