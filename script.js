@@ -35,6 +35,22 @@ function handleDropHit(event) {
   drop.remove();
 }
 
+function showResultPopup() {
+  const popup = document.getElementById("result-popup");
+  const title = document.getElementById("result-title");
+  const message = document.getElementById("result-message");
+
+  if (score > 40) {
+    title.textContent = "Good Job!";
+    message.textContent = "You collected enough water to complete Charity Water's mission!";
+  } else {
+    title.textContent = "Mission failed!";
+    message.textContent = "You did not collect enough water.";
+  }
+
+  popup.classList.remove("hidden");
+}
+
 function endGame() {
   clearInterval(dropMaker);
   clearInterval(timerInterval);
@@ -43,6 +59,7 @@ function endGame() {
   const gameContainer = document.getElementById("game-container");
   gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
 
+  showResultPopup();
   document.getElementById("start-btn").textContent = "Start Game";
 }
 
@@ -60,6 +77,7 @@ function startGame() {
   gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
 
   gameRunning = true;
+  document.getElementById("result-popup").classList.add("hidden");
   document.getElementById("start-btn").textContent = "Playing...";
 
   // Create new drops every 400 milliseconds
