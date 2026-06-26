@@ -10,6 +10,7 @@ const gameContainer = document.getElementById("game-container");
 
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
+document.getElementById("reset-btn").addEventListener("click", resetGame);
 gameContainer.addEventListener("pointerdown", handleDropHit);
 
 function updateScore() {
@@ -35,6 +36,25 @@ function handleDropHit(event) {
   drop.remove();
 }
 
+function createCelebrationEffect(isWin) {
+  const confettiLayer = document.getElementById("confetti-layer");
+  confettiLayer.innerHTML = "";
+
+  const colors = isWin
+    ? ["#ffc907", "#2e9df7", "#4fcb53", "#ff902a"]
+    : ["#f5402c", "#f16061", "#5c4116"];
+
+  for (let i = 0; i < 40; i += 1) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.setProperty("--drift", `${(Math.random() - 0.5) * 220}px`);
+    piece.style.animationDuration = `${1 + Math.random() * 0.5}s`;
+    confettiLayer.appendChild(piece);
+  }
+}
+
 function showResultPopup() {
   const popup = document.getElementById("result-popup");
   const title = document.getElementById("result-title");
@@ -43,9 +63,11 @@ function showResultPopup() {
   if (score > 40) {
     title.textContent = "Good Job!";
     message.textContent = "You collected enough water to complete Charity Water's mission!";
+    createCelebrationEffect(true);
   } else {
     title.textContent = "Mission failed!";
     message.textContent = "You did not collect enough water.";
+    createCelebrationEffect(false);
   }
 
   popup.classList.remove("hidden");
@@ -63,6 +85,23 @@ function endGame() {
   document.getElementById("start-btn").textContent = "Start Game";
 }
 
+function resetGame() {
+  clearInterval(dropMaker);
+  clearInterval(timerInterval);
+  gameRunning = false;
+
+  score = 0;
+  timeLeft = 30;
+  dropCount = 0;
+  updateScore();
+  updateTimer();
+
+  gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
+  document.getElementById("confetti-layer").innerHTML = "";
+  document.getElementById("result-popup").classList.add("hidden");
+  document.getElementById("start-btn").textContent = "Start Game";
+}
+
 function startGame() {
   // Prevent multiple games from running at once
   if (gameRunning) return;
@@ -77,6 +116,7 @@ function startGame() {
   gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
 
   gameRunning = true;
+  document.getElementById("confetti-layer").innerHTML = "";
   document.getElementById("result-popup").classList.add("hidden");
   document.getElementById("start-btn").textContent = "Playing...";
 
