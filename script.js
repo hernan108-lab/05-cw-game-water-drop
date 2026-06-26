@@ -1,9 +1,9 @@
 // Variables to control game state
 let gameRunning = false; // Keeps track of whether game is active or not
 let dropMaker; // Will store our timer that creates drops regularly
-let timerInterval; // Stores the countdown timer
+let timerInterval; // Will store the countdown timer
 let score = 0; // Tracks the player's points
-let timeLeft = 30; // Tracks the remaining game time
+let timeLeft = 30; // Countdown time in seconds
 
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
@@ -17,17 +17,14 @@ function updateTimer() {
 }
 
 function endGame() {
-  if (!gameRunning) return;
-
-  gameRunning = false;
   clearInterval(dropMaker);
   clearInterval(timerInterval);
+  gameRunning = false;
 
   const gameContainer = document.getElementById("game-container");
   gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
 
-  timeLeft = 30;
-  updateTimer();
+  document.getElementById("start-btn").textContent = "Start Game";
 }
 
 function startGame() {
@@ -39,15 +36,16 @@ function startGame() {
   updateScore();
   updateTimer();
 
-  gameRunning = true;
-
-  // Clear any existing drops from a previous round
   const gameContainer = document.getElementById("game-container");
   gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
 
-  // Create new drops every second (275 milliseconds)
+  gameRunning = true;
+  document.getElementById("start-btn").textContent = "Playing...";
+
+  // Create new drops every 275 milliseconds
   dropMaker = setInterval(createDrop, 275);
 
+  // Count down the timer once per second
   timerInterval = setInterval(() => {
     timeLeft -= 1;
     updateTimer();
@@ -82,6 +80,8 @@ function createDrop() {
   document.getElementById("game-container").appendChild(drop);
 
   drop.addEventListener("click", () => {
+    if (!gameRunning) return;
+
     score += 1;
     updateScore();
     drop.remove();
@@ -92,3 +92,6 @@ function createDrop() {
     drop.remove(); // Clean up drops that weren't caught
   });
 }
+
+updateScore();
+updateTimer();
