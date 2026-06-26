@@ -4,6 +4,7 @@ let dropMaker; // Will store our timer that creates drops regularly
 let timerInterval; // Will store the countdown timer
 let score = 0; // Tracks the player's points
 let timeLeft = 30; // Countdown time in seconds
+let dropCount = 0; // Tracks how many drops have spawned
 
 const gameContainer = document.getElementById("game-container");
 
@@ -51,6 +52,7 @@ function startGame() {
 
   score = 0;
   timeLeft = 30;
+  dropCount = 0;
   updateScore();
   updateTimer();
 
@@ -75,11 +77,13 @@ function startGame() {
 }
 
 function createDrop() {
+  dropCount += 1;
+
   // Water drops
   const drop = document.createElement("div");
   drop.className = "water-drop";
 
-  if (Math.random() < 0.25) {
+  if (dropCount % 10 === 0) {
     drop.classList.add("bad-drop");
   }
 
