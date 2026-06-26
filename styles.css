@@ -110,6 +110,18 @@ body {
     background-color: #ff4444;
 }
 
+.title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.logo-image {
+    width: 70px;
+    height: auto;
+}
+
 .game-title {
     color: #131313;
     font-size: 48px;
