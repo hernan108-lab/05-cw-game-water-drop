@@ -24,7 +24,12 @@ function handleDropHit(event) {
 
   if (!drop || !gameRunning) return;
 
-  score += 1;
+  if (drop.classList.contains("bad-drop")) {
+    score -= 2;
+  } else {
+    score += 1;
+  }
+
   updateScore();
   drop.remove();
 }
@@ -70,9 +75,13 @@ function startGame() {
 }
 
 function createDrop() {
-  // Create a new div element that will be our water drop
+  // Water drops
   const drop = document.createElement("div");
   drop.className = "water-drop";
+
+  if (Math.random() < 0.25) {
+    drop.classList.add("bad-drop");
+  }
 
   // Make drops different sizes for visual variety
   const initialSize = 30; // Base size in pixels
