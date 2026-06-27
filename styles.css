@@ -231,6 +231,24 @@ body {
     }
 }
 
+.water-can-decoration {
+    width: 120px;
+    height: auto;
+    margin-top: 15px;
+    opacity: 0.85;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+    animation: waterCanBounce 2.5s ease-in-out infinite;
+}
+
+@keyframes waterCanBounce {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-8px) rotate(2deg);
+    }
+}
+
 @media (max-width: 850px) {
     body {
         padding: 12px;
